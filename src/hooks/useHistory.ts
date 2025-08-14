@@ -5,60 +5,93 @@ import { STORAGE_KEYS } from '@/lib/constants';
 import { truncateText, generateId } from '@/lib/utils';
 
 export function useHistory() {
-  const [conversations, setConversations] = useState<Map<string, Conversation>>(
-    () => new Map(Storage.get(STORAGE_KEYS.CONVERSATIONS, []))
-  );
+  const [conversations, setConversations] = useState<Conversation[]>(() => {
+    const stored = Storage.get(STORAGE_KEYS.CONVERSATIONS, []);
+    return Array.isArray(stored) ? stored : [];
+  });
+
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
 
   const saveConversation = useCallback((messages: Message[]) => {
     if (messages.length === 0) return;
 
     const firstUserMessage = messages.find(m => m.role === 'user');
-    const firstBotMessage = messages.find(m => m.role === 'assistant');
-    
     const title = firstUserMessage 
       ? truncateText(firstUserMessage.content, 50)
       : 'New Conversation';
     
-    const preview = firstBotMessage 
-      ? truncateText(firstBotMessage.content, 100)
+    const preview = firstUserMessage 
+      ? truncateText(firstUserMessage.content, 100)
       : 'No preview available';
 
-    const conversationId = generateId();
-    const conversation: Conversation = {
-      id: conversationId,
-      title,
-      preview,
-      messages: [...messages],
-      lastUpdated: new Date().toISOString(),
-    };
-
     setConversations(prev => {
-      const updated = new Map(prev);
-      updated.set(conversationId, conversation);
+      let updated = [...prev];
       
-      // Keep only last 50 conversations
-      if (updated.size > 50) {
-        const sorted = Array.from(updated.values())
-          .sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime());
-        
-        const toKeep = sorted.slice(0, 50);
-        updated.clear();
-        toKeep.forEach(conv => updated.set(conv.id, conv));
+      if (currentConversationId) {
+        // Update existing conversation
+        const index = updated.findIndex(c => c.id === currentConversationId);
+        if (index !== -1) {
+          updated[index] = {
+            ...updated[index],
+            title,
+            preview,
+            messages: messages.map(msg => ({
+              ...msg,
+              timestamp: msg.timestamp instanceof Date ? msg.timestamp : new Date(msg.timestamp || Date.now())
+            })),
+            lastUpdated: new Date().toISOString(),
+          };
+        }
+      } else {
+        // Create new conversation
+        const newConversation: Conversation = {
+          id: generateId(),
+          title,
+          preview,
+          messages: messages.map(msg => ({
+            ...msg,
+            timestamp: msg.timestamp instanceof Date ? msg.timestamp : new Date(msg.timestamp || Date.now())
+          })),
+          lastUpdated: new Date().toISOString(),
+        };
+        updated.unshift(newConversation);
+        setCurrentConversationId(newConversation.id);
       }
       
-      Storage.set(STORAGE_KEYS.CONVERSATIONS, Array.from(updated.entries()));
+      // Keep only last 50 conversations
+      if (updated.length > 50) {
+        updated = updated.slice(0, 50);
+      }
+      
+      Storage.set(STORAGE_KEYS.CONVERSATIONS, updated);
       return updated;
     });
-
-    return conversationId;
-  }, []);
+  }, [currentConversationId]);
 
   const loadConversation = useCallback((id: string): Conversation | null => {
-    return conversations.get(id) || null;
+    const conversation = conversations.find(c => c.id === id);
+    if (conversation) {
+      setCurrentConversationId(id);
+      // Ensure timestamps are Date objects
+      const conversationWithDates = {
+        ...conversation,
+        messages: conversation.messages.map(msg => ({
+          ...msg,
+          timestamp: msg.timestamp instanceof Date ? msg.timestamp : new Date(msg.timestamp || Date.now())
+        }))
+      };
+      return conversationWithDates;
+    }
+    return null;
   }, [conversations]);
 
+  const newConversation = useCallback(() => {
+    setCurrentConversationId(null);
+  }, []);
+
   const clearHistory = useCallback(() => {
-    setConversations(new Map());
+    setConversations([]);
+    setCurrentConversationId(null);
     Storage.remove(STORAGE_KEYS.CONVERSATIONS);
   }, []);
 
@@ -68,7 +101,7 @@ export function useHistory() {
     
     const exportData = {
       timestamp: new Date().toISOString(),
-      conversations: Array.from(conversations.values()),
+      conversations,
     };
 
     const dataStr = JSON.stringify(exportData, null, 2);
@@ -81,9 +114,11 @@ export function useHistory() {
   }, [conversations]);
 
   return {
-    conversations: Array.from(conversations.values()),
+    conversations,
+    currentConversationId,
     saveConversation,
     loadConversation,
+    newConversation,
     clearHistory,
     exportHistory,
   };

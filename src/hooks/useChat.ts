@@ -36,7 +36,6 @@ export function useChat() {
         },
       };
 
-      // Add attachments if present
       if (attachments && attachments.length > 0) {
         requestBody.attachments = attachments;
       }
@@ -84,5 +83,6 @@ export function useChat() {
     error,
     sendMessage,
     clearMessages,
+    setMessages, // Add this for loading conversations
   };
 }

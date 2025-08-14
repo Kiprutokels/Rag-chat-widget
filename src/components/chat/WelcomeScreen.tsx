@@ -1,80 +1,96 @@
-import { MessageCircle, FileText, Calendar, Clock, Headphones, Shirt, UserCircle } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import {
+  MessageCircle,
+  Lightbulb,
+  Code,
+  FileText,
+  HelpCircle,
+  Calendar,
+  Clock,
+  Headphones,
+  Shirt,
+  UserCircle,
+} from "lucide-react";
 
 interface WelcomeScreenProps {
   onQuickAction: (query: string) => void;
 }
 
-const quickActions = [
-  {
-    icon: FileText,
-    label: 'Company Policies',
-    query: 'What are our company policies?'
-  },
+const suggestions = [
+
   {
     icon: Calendar,
-    label: 'Time Off Request',
-    query: 'How do I request time off?'
+    title: "How to request time off",
+    description: "timeoff requests",
+    query: "How do I request time off?",
   },
   {
     icon: Clock,
-    label: 'Office Hours',
-    query: 'What are the office hours?'
+    title: "The office hours",
+    description: "the office hours",
+    query: "What are the office hours?",
   },
   {
     icon: Headphones,
-    label: 'IT Support',
-    query: 'How do I contact IT support?'
-  },
-  {
-    icon: Shirt,
-    label: 'Dress Code',
-    query: 'What is our dress code policy?'
+    title: "IT Support",
+    description: "contact IT support",
+    query: "How do I contact IT support?",
   },
   {
     icon: UserCircle,
-    label: 'Employee Portal',
-    query: 'How do I access the employee portal?'
+    title: "Employee Portal",
+    description: "employee portal access",
+    query: "How do I access the employee portal?",
   },
 ];
 
 export function WelcomeScreen({ onQuickAction }: WelcomeScreenProps) {
   return (
     <div className="flex-1 flex items-center justify-center p-6">
-      <div className="text-center max-w-2xl">
-        <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-          <MessageCircle className="h-10 w-10 text-white" />
-        </div>
-        
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Welcome to Knowledge Assistant
-        </h2>
-        
-        <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-          Get instant answers from our comprehensive knowledge base. Ask about policies, procedures, guidelines, and more.
-        </p>
-        
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold text-gray-800">Quick Actions</h3>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {quickActions.map((action, index) => {
-              const Icon = action.icon;
-              return (
-                <Button
-                  key={index}
-                  variant="outline"
-                  className="h-auto flex-col gap-3 p-4 hover:bg-gray-50 hover:border-primary-500 group transition-all"
-                  onClick={() => onQuickAction(action.query)}
-                >
-                  <Icon className="h-6 w-6 text-primary-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-medium text-center leading-tight">
-                    {action.label}
-                  </span>
-                </Button>
-              );
-            })}
+      <div className="max-w-4xl w-full">
+        {/* Welcome Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-6">
+            <MessageCircle className="h-8 w-8 text-white" />
           </div>
+
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            How can I help you today?
+          </h1>
+        </div>
+
+        {/* Suggestions Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          {suggestions.map((suggestion, index) => {
+            const Icon = suggestion.icon;
+            return (
+              <button
+                key={index}
+                onClick={() => onQuickAction(suggestion.query)}
+                className="group p-6 text-left bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:shadow-md"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <Icon className="h-6 w-6 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {suggestion.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {suggestion.description}
+                    </p>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Footer Message */}
+        <div className="text-center mt-12">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Powered by AI • Searching Company Knowledge Base
+          </p>
         </div>
       </div>
     </div>

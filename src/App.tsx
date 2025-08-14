@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Header } from '@/components/layout/Header';
-import { ChatContainer } from '@/components/chat/ChatContainer';
-import { MessageInput } from '@/components/chat/MessageInput';
-import { WelcomeScreen } from '@/components/chat/WelcomeScreen';
-import { SettingsModal } from '@/components/modals/SettingsModal';
-import { HistoryModal } from '@/components/modals/HistoryModal';
+import { Layout } from '@/components/layout/Layout';
 import { Toast } from '@/components/ui/Toast';
 import { useChat } from '@/hooks/useChat';
 import { useSettings } from '@/hooks/useSettings';
@@ -14,16 +9,19 @@ import { apiClient } from '@/lib/api';
 import { Attachment } from '@/types/chat';
 
 export default function App() {
-  const { messages, isLoading, sendMessage, clearMessages } = useChat();
+  const { messages, isLoading, sendMessage, clearMessages, setMessages } = useChat();
   const { settings, updateSettings, resetSettings } = useSettings();
-  const { conversations, saveConversation, loadConversation, clearHistory, exportHistory } = useHistory();
+  const { 
+    conversations, 
+    saveConversation, 
+    loadConversation, 
+    newConversation,
+    clearHistory, 
+    exportHistory 
+  } = useHistory();
   const { toasts, removeToast, success, error } = useToast();
   
   const [isConnected, setIsConnected] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  
-  const showWelcome = messages.length === 0;
 
   // Check connection periodically
   useEffect(() => {
@@ -54,10 +52,7 @@ export default function App() {
 
   const handleSendMessage = (message: string, attachments?: Attachment[]) => {
     if (settings.soundEnabled) {
-      // Play send sound (you can add audio file here)
-      new Audio('/sounds/send.mp3').play().catch(() => {
-        // Ignore audio errors
-      });
+      new Audio('/sounds/send.mp3').play().catch(() => {});
     }
     sendMessage(message, attachments);
   };
@@ -74,10 +69,14 @@ export default function App() {
   const handleLoadConversation = (id: string) => {
     const conversation = loadConversation(id);
     if (conversation) {
-      clearMessages();
-      // Note: You'd need to implement loading conversation messages
+      setMessages(conversation.messages);
       success('Conversation loaded');
     }
+  };
+
+  const handleNewChat = () => {
+    newConversation();
+    clearMessages();
   };
 
   const handleClearHistory = () => {
@@ -97,49 +96,23 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl border border-gray-200 dark:border-gray-700">
-      <Header
-        isConnected={isConnected}
-        onSettingsClick={() => setShowSettings(true)}
-        onHistoryClick={() => setShowHistory(true)}
-      />
-
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {showWelcome ? (
-          <WelcomeScreen onQuickAction={handleQuickAction} />
-        ) : (
-          <ChatContainer
-            messages={messages}
-            isLoading={isLoading}
-            onCopyMessage={handleCopyMessage}
-            onLikeMessage={handleLikeMessage}
-          />
-        )}
-      </div>
-
-      <MessageInput 
-        onSend={handleSendMessage} 
-        disabled={isLoading}
-        maxFileSize={settings.maxFileSize}
-        allowedFileTypes={settings.allowedFileTypes}
-      />
-
-      {/* Modals */}
-      <SettingsModal
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        settings={settings}
-        onUpdateSettings={updateSettings}
-        onResetSettings={resetSettings}
-      />
-
-      <HistoryModal
-        isOpen={showHistory}
-        onClose={() => setShowHistory(false)}
+    <>
+      <Layout
+        messages={messages}
+        isLoading={isLoading}
+        onSendMessage={handleSendMessage}
+        onQuickAction={handleQuickAction}
+        onCopyMessage={handleCopyMessage}
+        onLikeMessage={handleLikeMessage}
         conversations={conversations}
         onLoadConversation={handleLoadConversation}
         onClearHistory={handleClearHistory}
         onExportHistory={handleExportHistory}
+        onNewChat={handleNewChat}
+        settings={settings}
+        updateSettings={updateSettings}
+        resetSettings={resetSettings}
+        isConnected={isConnected}
       />
 
       {/* Toast Container */}
@@ -152,6 +125,6 @@ export default function App() {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }

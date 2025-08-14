@@ -12,35 +12,22 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, 'index.html'),
-                embed: resolve(__dirname, 'src/embed.js'), // your non-React widget script
+                embed: resolve(__dirname, 'public/embed.html'),
             },
-            output: [
-                // Output for main React app (default ESM)
-                {
-                    format: 'es',
-                    entryFileNames: function (chunk) {
-                        return chunk.name === 'main'
-                            ? 'assets/[name]-[hash].js'
-                            : 'assets/[name]-[hash].js';
-                    },
-                    chunkFileNames: 'assets/[name]-[hash].js',
-                    assetFileNames: 'assets/[name]-[hash].[ext]',
+            output: {
+                // Keep JS file names predictable
+                entryFileNames: function (chunk) {
+                    if (chunk.name === 'embed') {
+                        return 'assets/embed-script.js';
+                    }
+                    if (chunk.name === 'main') {
+                        return 'assets/main.js';
+                    }
+                    return 'assets/[name].js';
                 },
-                // Output for embed script (IIFE)
-                {
-                    format: 'iife',
-                    entryFileNames: function (chunk) {
-                        return chunk.name === 'embed'
-                            ? 'assets/embed-script.js'
-                            : 'assets/[name]-[hash].js';
-                    },
-                    name: 'RAGChatWidget', // global variable name
-                    chunkFileNames: 'assets/[name]-[hash].js',
-                    assetFileNames: 'assets/[name]-[hash].[ext]',
-                },
-            ],
+                chunkFileNames: 'assets/[name].js',
+                assetFileNames: 'assets/[name].[ext]',
+            },
         },
-        minify: true,
-        sourcemap: false,
     },
 });

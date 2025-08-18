@@ -181,6 +181,7 @@
                 margin: 0;
                 letter-spacing: -0.025em;
                 line-height: 1.3;
+                color: white;
             }
 
             .rag-chat-status {

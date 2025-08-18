@@ -6,7 +6,6 @@
         return;
     }
 
-    // Inject CSS styles
     function injectStyles() {
         if (document.getElementById('rag-chat-widget-styles')) {
             return;
@@ -62,8 +61,11 @@
                 position: relative;
                 width: 100%;
                 height: 100%;
-                min-height: 600px;
+                min-height: 500px;
+                max-height: 800px;
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                display: flex;
+                flex-direction: column;
             }
 
             .rag-chat-bubble {
@@ -80,14 +82,15 @@
                 backdrop-filter: blur(10px);
                 overflow: hidden;
                 width: 400px;
-                height: 610px;
+                height: 600px;
                 display: none;
+                flex-direction: column;
             }
 
             .rag-chat-bubble.rag-open {
                 transform: scale(1) translateY(0);
                 opacity: 1;
-                display: block;
+                display: flex;
             }
 
             .rag-chat-bubble.rag-embedded {
@@ -97,9 +100,11 @@
                 width: 100%;
                 height: 100%;
                 border-radius: 12px;
-                display: block;
+                display: flex;
                 bottom: auto;
                 right: auto;
+                max-width: 100%;
+                min-height: 500px;
             }
 
             .rag-chat-button {
@@ -131,11 +136,12 @@
             .rag-chat-header {
                 background: linear-gradient(135deg, var(--rag-primary-color), var(--rag-primary-hover));
                 color: white;
-                padding: 20px;
+                padding: 16px 20px;
                 border-radius: 16px 16px 0 0;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                flex-shrink: 0;
             }
 
             .rag-chat-header.rag-embedded {
@@ -145,40 +151,51 @@
             .rag-chat-header-info {
                 display: flex;
                 align-items: center;
-                gap: 16px;
+                gap: 12px;
             }
 
             .rag-chat-avatar {
-                width: 40px;
-                height: 40px;
+                width: 36px;
+                height: 36px;
                 background: rgba(255, 255, 255, 0.15);
-                border-radius: 12px;
+                border-radius: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 backdrop-filter: blur(10px);
-                font-size: 18px;
+                font-size: 16px;
+                overflow: hidden;
+                flex-shrink: 0;
+            }
+
+            .rag-chat-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 10px;
             }
 
             .rag-chat-title {
                 font-weight: 600;
-                font-size: 16px;
+                font-size: 15px;
                 margin: 0;
                 letter-spacing: -0.025em;
+                line-height: 1.3;
             }
 
             .rag-chat-status {
-                font-size: 13px;
+                font-size: 12px;
                 opacity: 0.9;
-                margin: 0;
+                margin: 2px 0 0 0;
                 display: flex;
                 align-items: center;
                 gap: 6px;
+                line-height: 1;
             }
 
             .rag-status-dot {
-                width: 8px;
-                height: 8px;
+                width: 6px;
+                height: 6px;
                 border-radius: 50%;
                 display: inline-block;
                 animation: rag-pulse-status 2s infinite;
@@ -198,6 +215,7 @@
                 border-radius: 8px;
                 transition: all 0.2s ease;
                 backdrop-filter: blur(10px);
+                font-size: 14px;
             }
 
             .rag-close-btn:hover {
@@ -206,17 +224,14 @@
             }
 
             .rag-messages-area {
-                height: 420px;
+                flex: 1;
                 overflow-y: auto;
-                padding: 20px;
+                padding: 16px;
                 background: var(--rag-surface);
                 scrollbar-width: thin;
                 scrollbar-color: var(--rag-border-color) transparent;
                 scroll-behavior: smooth;
-            }
-
-            .rag-messages-area.rag-embedded {
-                height: calc(100% - 160px);
+                min-height: 0;
             }
 
             .rag-messages-area::-webkit-scrollbar {
@@ -237,7 +252,7 @@
             }
 
             .rag-message {
-                margin-bottom: 20px;
+                margin-bottom: 16px;
                 animation: rag-message-slide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
@@ -260,30 +275,32 @@
             .rag-message-assistant {
                 display: flex;
                 align-items: flex-start;
-                gap: 12px;
+                gap: 10px;
             }
 
             .rag-message-content {
-                max-width: 280px;
-                padding: 14px 18px;
-                border-radius: 18px;
+                max-width: calc(100% - 50px);
+                padding: 12px 16px;
+                border-radius: 16px;
                 font-size: 14px;
-                line-height: 1.5;
+                line-height: 1.4;
                 word-wrap: break-word;
+                word-break: break-word;
             }
 
             .rag-message-user .rag-message-content {
                 background: linear-gradient(135deg, var(--rag-primary-color), var(--rag-primary-hover));
                 color: white;
-                border-radius: 18px 18px 4px 18px;
+                border-radius: 16px 16px 4px 16px;
                 box-shadow: var(--rag-shadow-sm);
+                max-width: 75%;
             }
 
             .rag-message-assistant .rag-message-content {
                 background: var(--rag-background);
                 color: var(--rag-text-primary);
                 border: 1px solid var(--rag-border-color);
-                border-radius: 18px 18px 18px 4px;
+                border-radius: 16px 16px 16px 4px;
                 box-shadow: var(--rag-shadow-sm);
             }
 
@@ -291,25 +308,44 @@
                 background: #fef2f2;
                 color: #dc2626;
                 border: 1px solid #fecaca;
-                border-radius: 18px 18px 18px 4px;
+                border-radius: 16px 16px 16px 4px;
             }
 
             .rag-assistant-avatar {
-                width: 36px;
-                height: 36px;
+                width: 32px;
+                height: 32px;
                 background: linear-gradient(135deg, var(--rag-primary-color), var(--rag-primary-hover));
-                border-radius: 12px;
+                border-radius: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 flex-shrink: 0;
                 color: white;
-                font-size: 16px;
+                font-size: 14px;
                 box-shadow: var(--rag-shadow-sm);
+                overflow: hidden;
+            }
+
+            .rag-assistant-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+
+            .rag-message-time {
+                font-size: 11px;
+                color: var(--rag-text-muted);
+                margin-top: 4px;
+                text-align: right;
+            }
+
+            .rag-message-assistant .rag-message-time {
+                text-align: left;
             }
 
             .rag-quick-actions {
-                margin-top: 12px;
+                margin-top: 10px;
                 display: flex;
                 flex-direction: column;
                 gap: 6px;
@@ -325,8 +361,8 @@
                 border: 1px solid var(--rag-border-color);
                 color: var(--rag-text-primary);
                 font-size: 12px;
-                padding: 10px 12px;
-                border-radius: 10px;
+                padding: 8px 12px;
+                border-radius: 8px;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 font-weight: 500;
@@ -341,10 +377,11 @@
             }
 
             .rag-input-area {
-                padding: 20px;
+                padding: 16px;
                 border-top: 1px solid var(--rag-border-color);
                 background: var(--rag-background);
                 border-radius: 0 0 16px 16px;
+                flex-shrink: 0;
             }
 
             .rag-input-area.rag-embedded {
@@ -353,7 +390,7 @@
 
             .rag-input-container {
                 display: flex;
-                gap: 12px;
+                gap: 8px;
                 align-items: flex-end;
                 background: var(--rag-surface);
                 padding: 4px;
@@ -371,15 +408,15 @@
                 flex: 1;
                 border: none;
                 border-radius: 10px;
-                padding: 12px 16px;
+                padding: 10px 12px;
                 font-size: 14px;
                 background: transparent;
                 color: var(--rag-text-primary);
                 resize: none;
                 min-height: 20px;
-                max-height: 120px;
+                max-height: 80px;
                 font-family: inherit;
-                line-height: 1.5;
+                line-height: 1.4;
             }
 
             .rag-message-input:focus {
@@ -400,14 +437,15 @@
                 border: none;
                 border-radius: 10px;
                 color: white;
-                width: 44px;
-                height: 44px;
+                width: 36px;
+                height: 36px;
                 cursor: pointer;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 transition: all 0.2s ease;
-                font-size: 16px;
+                font-size: 14px;
+                flex-shrink: 0;
             }
 
             .rag-send-btn:hover:not(:disabled) {
@@ -429,7 +467,7 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-top: 12px;
+                margin-top: 8px;
                 font-size: 11px;
                 color: var(--rag-text-muted);
             }
@@ -437,13 +475,13 @@
             .rag-typing-indicator {
                 display: flex;
                 gap: 4px;
-                padding: 16px 0;
+                padding: 12px 0;
                 justify-content: center;
             }
 
             .rag-typing-dot {
-                width: 8px;
-                height: 8px;
+                width: 6px;
+                height: 6px;
                 background: var(--rag-text-secondary);
                 border-radius: 50%;
                 animation: rag-typing-bounce 1.4s infinite ease-in-out;
@@ -479,12 +517,12 @@
                 background: linear-gradient(135deg, #ef4444, #dc2626);
                 color: white;
                 border-radius: 50%;
-                width: 24px;
-                height: 24px;
+                width: 20px;
+                height: 20px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 11px;
+                font-size: 10px;
                 font-weight: 700;
                 box-shadow: var(--rag-shadow-md);
                 animation: rag-badge-bounce 2s infinite;
@@ -495,19 +533,8 @@
                 50% { transform: scale(1.1); }
             }
 
-            .rag-welcome-message {
-                text-align: center;
-                padding: 24px 0;
-                color: var(--rag-text-secondary);
-            }
-
-            .rag-welcome-icon {
-                font-size: 48px;
-                margin-bottom: 16px;
-                opacity: 0.8;
-            }
-
-            @media (max-width: 480px) {
+            /* Mobile Responsiveness */
+            @media (max-width: 768px) {
                 .rag-chat-widget-container {
                     bottom: 16px;
                     right: 16px;
@@ -528,10 +555,85 @@
                     font-size: 20px;
                 }
 
-                .rag-messages-area {
-                    height: calc(70vh - 180px);
-                    padding: 16px;
+                .rag-chat-header {
+                    padding: 12px 16px;
                 }
+
+                .rag-chat-title {
+                    font-size: 14px;
+                }
+
+                .rag-chat-status {
+                    font-size: 11px;
+                }
+
+                .rag-chat-avatar {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 14px;
+                }
+
+                .rag-messages-area {
+                    padding: 12px;
+                }
+
+                .rag-message-content {
+                    font-size: 13px;
+                    padding: 10px 14px;
+                    max-width: calc(100% - 45px);
+                }
+
+                .rag-message-user .rag-message-content {
+                    max-width: 85%;
+                }
+
+                .rag-assistant-avatar {
+                    width: 28px;
+                    height: 28px;
+                    font-size: 12px;
+                }
+
+                .rag-input-area {
+                    padding: 12px;
+                }
+
+                .rag-message-input {
+                    font-size: 13px;
+                    padding: 8px 10px;
+                }
+
+                .rag-send-btn {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 12px;
+                }
+            }
+
+            /* Small mobile devices */
+            @media (max-width: 480px) {
+                .rag-chat-bubble {
+                    height: 75vh !important;
+                    max-height: 450px !important;
+                }
+
+                .rag-message-content {
+                    font-size: 12px;
+                    padding: 8px 12px;
+                }
+
+                .rag-quick-action-btn {
+                    font-size: 11px;
+                    padding: 6px 10px;
+                }
+            }
+
+            /* Embedded widget specific styles */
+            .rag-chat-widget-embedded {
+                box-sizing: border-box;
+            }
+
+            .rag-chat-widget-embedded * {
+                box-sizing: border-box;
             }
 
             /* Dark mode adjustments */
@@ -595,7 +697,6 @@
         });
     }
 
-    // Load Inter font
     function loadInterFont() {
         if (document.querySelector('link[href*="fonts.googleapis.com/css2?family=Inter"]')) {
             return Promise.resolve();
@@ -608,6 +709,15 @@
             link.onload = () => resolve();
             link.onerror = () => reject();
             document.head.appendChild(link);
+        });
+    }
+
+    // Utility function to format time
+    function formatTime(date) {
+        return date.toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true
         });
     }
 
@@ -625,6 +735,8 @@
                 height: options.height || '600px',
                 placeholder: options.placeholder || 'Ask me anything...',
                 position: options.position || 'bottom-right',
+                avatar: options.avatar || null,
+                showTime: options.showTime !== false,
                 ...options
             };
 
@@ -639,13 +751,11 @@
 
         async init() {
             try {
-                // Load external resources
                 await Promise.all([
                     loadFontAwesome().catch(() => console.warn('Font Awesome failed to load')),
                     loadInterFont().catch(() => console.warn('Inter font failed to load'))
                 ]);
 
-                // Create widget after resources load
                 this.createWidget();
                 this.bindEvents();
                 this.checkConnection();
@@ -720,11 +830,15 @@
         }
 
         createChatContent(embedded = false) {
+            const avatarContent = this.config.avatar ? 
+                `<img src="${this.config.avatar}" alt="Assistant" />` : 
+                `<i class="fas fa-sparkles"></i>`;
+
             return `
                 <div class="rag-chat-header ${embedded ? 'rag-embedded' : ''}">
                     <div class="rag-chat-header-info">
                         <div class="rag-chat-avatar">
-                            <i class="fas fa-sparkles"></i>
+                            ${avatarContent}
                         </div>
                         <div>
                             <h3 class="rag-chat-title">${this.config.title}</h3>
@@ -737,19 +851,20 @@
                     ${!embedded ? '<button class="rag-close-btn" id="rag-close-chat-btn" aria-label="Close chat"><i class="fas fa-times"></i></button>' : ''}
                 </div>
 
-                <div class="rag-messages-area ${embedded ? 'rag-embedded' : ''}" id="rag-messages-area">
+                <div class="rag-messages-area" id="rag-messages-area">
                     <div class="rag-message rag-message-assistant">
                         <div class="rag-assistant-avatar">
-                            <i class="fas fa-sparkles"></i>
+                            ${avatarContent}
                         </div>
                         <div class="rag-message-content">
                             <p>Hello! I'm your AI assistant. I'm here to help answer your questions and provide support.</p>
+                            ${this.config.showTime ? `<div class="rag-message-time">${formatTime(new Date())}</div>` : ''}
                             <div class="rag-quick-actions">
                                 <button class="rag-quick-action-btn" data-query="How can you help me?">
                                     <i class="fas fa-question-circle"></i>
                                     How can you help me?
                                 </button>
-                                <button class="rag-quick-action-btn" data-query="what can you do?">
+                                <button class="rag-quick-action-btn" data-query="What can you do?">
                                     <i class="fas fa-star"></i>
                                     What can you do?
                                 </button>
@@ -815,12 +930,17 @@
                 }
             });
 
-            // Only add click outside listener for floating widget
             if (!this.config.embedded) {
                 document.addEventListener('click', (e) => {
                     if (!this.elements.widget.contains(e.target) && this.isOpen) {
                         setTimeout(() => this.closeChat(), 150);
                     }
+                });
+            }
+
+            if (this.config.embedded) {
+                window.addEventListener('resize', () => {
+                    this.scrollToBottom();
                 });
             }
         }
@@ -832,7 +952,7 @@
         openChat() {
             if (this.config.embedded) return;
 
-            this.elements.bubble.style.display = 'block';
+            this.elements.bubble.style.display = 'flex';
             setTimeout(() => {
                 this.elements.bubble.classList.add('rag-open');
             }, 10);
@@ -897,8 +1017,13 @@
         addUserMessage(message) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'rag-message rag-message-user';
+            const timeStr = this.config.showTime ? `<div class="rag-message-time">${formatTime(new Date())}</div>` : '';
+            
             messageDiv.innerHTML = `
-                <div class="rag-message-content">${this.escapeHtml(message)}</div>
+                <div class="rag-message-content">
+                    ${this.escapeHtml(message)}
+                    ${timeStr}
+                </div>
             `;
             this.elements.messagesArea.appendChild(messageDiv);
             this.scrollToBottom();
@@ -908,12 +1033,19 @@
             this.removeTypingIndicator();
             const messageDiv = document.createElement('div');
             messageDiv.className = 'rag-message rag-message-assistant';
+            const timeStr = this.config.showTime ? `<div class="rag-message-time">${formatTime(new Date())}</div>` : '';
+            
+            const avatarContent = this.config.avatar ? 
+                `<img src="${this.config.avatar}" alt="Assistant" />` : 
+                `<i class="fas fa-sparkles"></i>`;
+
             messageDiv.innerHTML = `
                 <div class="rag-assistant-avatar">
-                    <i class="fas fa-sparkles"></i>
+                    ${avatarContent}
                 </div>
                 <div class="rag-message-content">
                     ${this.formatMessage(message)}
+                    ${timeStr}
                 </div>
             `;
             this.elements.messagesArea.appendChild(messageDiv);
@@ -924,11 +1056,16 @@
             this.removeTypingIndicator();
             const messageDiv = document.createElement('div');
             messageDiv.className = 'rag-message rag-message-error';
+            const timeStr = this.config.showTime ? `<div class="rag-message-time">${formatTime(new Date())}</div>` : '';
+            
             messageDiv.innerHTML = `
                 <div class="rag-assistant-avatar" style="background: var(--rag-error-color);">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <div class="rag-message-content">${this.escapeHtml(message)}</div>
+                <div class="rag-message-content">
+                    ${this.escapeHtml(message)}
+                    ${timeStr}
+                </div>
             `;
             this.elements.messagesArea.appendChild(messageDiv);
             this.scrollToBottom();
@@ -952,9 +1089,14 @@
             const typingDiv = document.createElement('div');
             typingDiv.className = 'rag-message rag-message-assistant';
             typingDiv.id = 'rag-typing-indicator';
+            
+            const avatarContent = this.config.avatar ? 
+                `<img src="${this.config.avatar}" alt="Assistant" />` : 
+                `<i class="fas fa-sparkles"></i>`;
+
             typingDiv.innerHTML = `
                 <div class="rag-assistant-avatar">
-                    <i class="fas fa-sparkles"></i>
+                    ${avatarContent}
                 </div>
                 <div class="rag-message-content">
                     <div class="rag-typing-indicator">
@@ -1061,7 +1203,7 @@
 
         autoResize(textarea) {
             textarea.style.height = 'auto';
-            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            textarea.style.height = Math.min(textarea.scrollHeight, 80) + 'px';
         }
 
         applyTheme() {
@@ -1118,6 +1260,24 @@
                 styles.remove();
             }
         }
+
+        updateAvatar(avatarUrl) {
+            this.config.avatar = avatarUrl;
+            const avatars = document.querySelectorAll('.rag-chat-avatar, .rag-assistant-avatar');
+            avatars.forEach(avatar => {
+                avatar.innerHTML = avatarUrl ? 
+                    `<img src="${avatarUrl}" alt="Assistant" />` : 
+                    `<i class="fas fa-sparkles"></i>`;
+            });
+        }
+
+        updateTitle(title) {
+            this.config.title = title;
+            const titleEl = document.querySelector('.rag-chat-title');
+            if (titleEl) {
+                titleEl.textContent = title;
+            }
+        }
     }
 
     // Make RAGChatWidget globally available
@@ -1125,37 +1285,32 @@
 
     // Auto-initialize based on configuration
     function autoInit() {
-        // Inject styles first
         injectStyles();
 
-        // Check for embedded widget element
         const embeddedElement = document.querySelector('[data-rag-chat-embedded]');
 
         if (embeddedElement) {
-            // Embedded mode
             const dataset = embeddedElement.dataset;
             new RAGChatWidget({
                 apiUrl: dataset.apiUrl,
-                title: dataset.title,
-                theme: dataset.theme,
+                title: dataset.title || 'AI Assistant',
+                theme: dataset.theme || 'auto',
                 embedded: true,
-                container: embeddedElement.id || 'rag-chat-embedded'
+                container: embeddedElement.id || 'rag-chat-embedded',
+                avatar: dataset.avatar || null,
+                showTime: dataset.showTime !== 'false'
             });
         } else if (window.RAGChatConfig) {
-            // Custom configuration provided
             new RAGChatWidget(window.RAGChatConfig);
         } else {
-            // Default floating widget - only if no explicit config
             console.log('RAGChatWidget loaded - use "new RAGChatWidget(config)" to initialize');
         }
     }
 
-    // Global function to manually initialize chat widget
     window.initRAGChat = function(config) {
         return new RAGChatWidget(config);
     };
 
-    // Auto-initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', autoInit);
     } else {

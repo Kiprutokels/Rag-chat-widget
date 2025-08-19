@@ -133,6 +133,53 @@
                 transform: scale(0.95);
             }
 
+            .rag-chat-popup {
+                position: absolute;
+                bottom: 80px;
+                right: 0;
+                background: var(--rag-background);
+                border: 1px solid var(--rag-border-color);
+                border-radius: 12px;
+                padding: 12px 16px;
+                box-shadow: var(--rag-shadow-lg);
+                backdrop-filter: blur(10px);
+                white-space: nowrap;
+                font-size: 14px;
+                color: var(--rag-text-primary);
+                font-weight: 500;
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                pointer-events: none;
+                min-width: 200px;
+                text-align: center;
+            }
+
+            .rag-chat-popup::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                right: 20px;
+                border: 8px solid transparent;
+                border-top-color: var(--rag-background);
+                margin-top: -1px;
+            }
+
+            .rag-chat-popup::before {
+                content: '';
+                position: absolute;
+                top: 100%;
+                right: 20px;
+                border: 9px solid transparent;
+                border-top-color: var(--rag-border-color);
+            }
+
+            .rag-chat-popup.rag-show {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
             .rag-chat-header {
                 background: linear-gradient(135deg, var(--rag-primary-color), var(--rag-primary-hover));
                 color: white;
@@ -550,6 +597,22 @@
                     max-height: 500px !important;
                 }
 
+                .rag-chat-popup {
+                    bottom: 70px;
+                    right: 0;
+                    left: -50px;
+                    min-width: 150px;
+                    font-size: 13px;
+                }
+
+                .rag-chat-popup::after {
+                    right: 50px;
+                }
+
+                .rag-chat-popup::before {
+                    right: 50px;
+                }
+
                 .rag-chat-button {
                     width: 56px;
                     height: 56px;
@@ -653,13 +716,27 @@
                 border-color: var(--rag-border-color);
             }
 
+            [data-rag-theme="dark"] .rag-chat-popup {
+                background: var(--rag-surface);
+                border-color: var(--rag-border-color);
+            }
+
+            [data-rag-theme="dark"] .rag-chat-popup::after {
+                border-top-color: var(--rag-surface);
+            }
+
+            [data-rag-theme="dark"] .rag-chat-popup::before {
+                border-top-color: var(--rag-border-color);
+            }
+
             /* Accessibility */
             @media (prefers-reduced-motion: reduce) {
                 .rag-chat-bubble,
                 .rag-chat-button,
                 .rag-message,
                 .rag-typing-dot,
-                .rag-notification-badge {
+                .rag-notification-badge,
+                .rag-chat-popup {
                     animation-duration: 0.01ms !important;
                     animation-iteration-count: 1 !important;
                     transition-duration: 0.01ms !important;
@@ -738,6 +815,11 @@
                 position: options.position || 'bottom-right',
                 avatar: options.avatar || null,
                 showTime: options.showTime !== false,
+                popupMessage: options.popupMessage || 'Hello, how can I assist you?',
+                showPopup: options.showPopup !== false,
+                popupDelay: options.popupDelay || 1000,
+                popupAutoHide: options.popupAutoHide !== false,
+                popupAutoHideDelay: options.popupAutoHideDelay || 60000,
                 ...options
             };
 
@@ -746,6 +828,9 @@
             this.conversationId = null;
             this.messages = [];
             this.isConnected = false;
+            this.popupTimeout = null;
+            this.popupAutoHideTimeout = null;
+            this.popupShown = false;
 
             this.init();
         }
@@ -761,12 +846,14 @@
                 this.bindEvents();
                 this.checkConnection();
                 this.applyTheme();
+                this.initPopup();
             } catch (error) {
                 console.error('RAG Chat Widget initialization failed:', error);
                 this.createWidget();
                 this.bindEvents();
                 this.checkConnection();
                 this.applyTheme();
+                this.initPopup();
             }
         }
 
@@ -801,7 +888,8 @@
                 messageInput: document.getElementById('rag-message-input'),
                 sendBtn: document.getElementById('rag-send-btn'),
                 statusIndicator: document.getElementById('rag-status-indicator'),
-                charCount: document.getElementById('rag-char-count')
+                charCount: document.getElementById('rag-char-count'),
+                popup: document.getElementById('rag-chat-popup')
             };
         }
 
@@ -810,6 +898,9 @@
                 <div class="rag-chat-widget-container" id="rag-chat-widget">
                     <div class="rag-chat-bubble" id="rag-chat-bubble">
                         ${this.createChatContent()}
+                    </div>
+                    <div class="rag-chat-popup" id="rag-chat-popup">
+                        ${this.config.popupMessage}
                     </div>
                     <button class="rag-chat-button" id="rag-chat-toggle-btn" aria-label="Open chat">
                         <i class="fas fa-comments" id="rag-chat-icon"></i>
@@ -900,6 +991,40 @@
             `;
         }
 
+        initPopup() {
+            if (!this.config.embedded && this.config.showPopup && this.elements.popup) {
+                this.popupTimeout = setTimeout(() => {
+                    this.showPopup();
+                }, this.config.popupDelay);
+            }
+        }
+
+        showPopup() {
+            if (this.elements.popup && !this.popupShown && !this.isOpen) {
+                this.elements.popup.classList.add('rag-show');
+                this.popupShown = true;
+                
+                // Auto-hide popup after 1 minute if configured
+                if (this.config.popupAutoHide) {
+                    this.popupAutoHideTimeout = setTimeout(() => {
+                        this.hidePopup();
+                    }, this.config.popupAutoHideDelay);
+                }
+            }
+        }
+
+        hidePopup() {
+            if (this.elements.popup) {
+                this.elements.popup.classList.remove('rag-show');
+            }
+            
+            // Clear the auto-hide timeout if it exists
+            if (this.popupAutoHideTimeout) {
+                clearTimeout(this.popupAutoHideTimeout);
+                this.popupAutoHideTimeout = null;
+            }
+        }
+
         bindEvents() {
             if (this.elements.toggleBtn) {
                 this.elements.toggleBtn.addEventListener('click', () => this.toggleChat());
@@ -930,6 +1055,13 @@
                     this.sendQuickMessage(query);
                 }
             });
+
+            // Remove hover hide behavior - popup only hides when chat opens
+            if (this.elements.toggleBtn) {
+                this.elements.toggleBtn.addEventListener('click', () => {
+                    this.hidePopup();
+                });
+            }
 
             if (!this.config.embedded) {
                 document.addEventListener('click', (e) => {
@@ -966,6 +1098,7 @@
             if (closeIcon) closeIcon.style.display = 'block';
             if (badge) badge.style.display = 'none';
 
+            this.hidePopup();
             this.isOpen = true;
             setTimeout(() => this.elements.messageInput.focus(), 400);
         }
@@ -1253,6 +1386,12 @@
         }
 
         destroy() {
+            if (this.popupTimeout) {
+                clearTimeout(this.popupTimeout);
+            }
+            if (this.popupAutoHideTimeout) {
+                clearTimeout(this.popupAutoHideTimeout);
+            }
             if (this.elements.widget) {
                 this.elements.widget.remove();
             }
@@ -1279,6 +1418,21 @@
                 titleEl.textContent = title;
             }
         }
+
+        updatePopupMessage(message) {
+            this.config.popupMessage = message;
+            if (this.elements.popup) {
+                this.elements.popup.textContent = message;
+            }
+        }
+
+        showPopupManually() {
+            this.showPopup();
+        }
+
+        hidePopupManually() {
+            this.hidePopup();
+        }
     }
 
     // Make RAGChatWidget globally available
@@ -1299,7 +1453,11 @@
                 embedded: true,
                 container: embeddedElement.id || 'rag-chat-embedded',
                 avatar: dataset.avatar || null,
-                showTime: dataset.showTime !== 'false'
+                showTime: dataset.showTime !== 'false',
+                popupMessage: dataset.popupMessage || 'Hello, how can I assist you?',
+                showPopup: dataset.showPopup !== 'false',
+                popupDelay: parseInt(dataset.popupDelay) || 1000,
+                popupAutoHideDelay: parseInt(dataset.popupAutoHideDelay) || 60000
             });
         } else if (window.RAGChatConfig) {
             new RAGChatWidget(window.RAGChatConfig);

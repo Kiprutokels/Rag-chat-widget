@@ -33,9 +33,6 @@
                 --rag-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
                 --rag-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
                 --rag-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                --rag-radius: 16px;
-                --rag-radius-sm: 8px;
-                --rag-radius-lg: 20px;
             }
 
             [data-rag-theme="dark"] {
@@ -52,10 +49,6 @@
                 --rag-border-color: #334155;
             }
 
-            * {
-                box-sizing: border-box;
-            }
-
             .rag-chat-widget-container {
                 position: fixed;
                 bottom: 24px;
@@ -68,34 +61,28 @@
                 position: relative;
                 width: 100%;
                 height: 100%;
-                min-height: 400px;
+                min-height: 500px;
                 max-height: 800px;
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 display: flex;
                 flex-direction: column;
-                background: var(--rag-background);
-                border-radius: var(--rag-radius);
-                overflow: hidden;
-                border: 1px solid var(--rag-border-color);
-                box-shadow: var(--rag-shadow-lg);
             }
 
             .rag-chat-bubble {
                 position: fixed;
-                bottom: 90px;
+                bottom: 100px;
                 right: 24px;
                 transform: scale(0.8) translateY(20px);
                 opacity: 0;
                 transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
                 background: var(--rag-background);
                 border: 1px solid var(--rag-border-color);
-                border-radius: var(--rag-radius);
+                border-radius: 16px;
                 box-shadow: var(--rag-shadow-xl);
                 backdrop-filter: blur(10px);
                 overflow: hidden;
-                width: 380px;
+                width: 400px;
                 height: 600px;
-                max-height: calc(100vh - 140px);
                 display: none;
                 flex-direction: column;
             }
@@ -112,13 +99,12 @@
                 opacity: 1;
                 width: 100%;
                 height: 100%;
-                border-radius: var(--rag-radius);
+                border-radius: 12px;
                 display: flex;
                 bottom: auto;
                 right: auto;
                 max-width: 100%;
-                min-height: 400px;
-                max-height: none;
+                min-height: 500px;
             }
 
             .rag-chat-button {
@@ -149,7 +135,7 @@
 
             .rag-chat-popup {
                 position: absolute;
-                bottom: 75px;
+                bottom: 80px;
                 right: 0;
                 background: var(--rag-background);
                 border: 1px solid var(--rag-border-color);
@@ -166,10 +152,7 @@
                 transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
                 pointer-events: none;
                 min-width: 200px;
-                max-width: 280px;
                 text-align: center;
-                white-space: normal;
-                line-height: 1.4;
             }
 
             .rag-chat-popup::after {
@@ -201,7 +184,7 @@
                 background: linear-gradient(135deg, var(--rag-primary-color), var(--rag-primary-hover));
                 color: white;
                 padding: 16px 20px;
-                border-radius: var(--rag-radius) var(--rag-radius) 0 0;
+                border-radius: 16px 16px 0 0;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -209,15 +192,13 @@
             }
 
             .rag-chat-header.rag-embedded {
-                border-radius: var(--rag-radius) var(--rag-radius) 0 0;
+                border-radius: 12px 12px 0 0;
             }
 
             .rag-chat-header-info {
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                min-width: 0;
-                flex: 1;
             }
 
             .rag-chat-avatar {
@@ -248,9 +229,6 @@
                 letter-spacing: -0.025em;
                 line-height: 1.3;
                 color: white;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
             }
 
             .rag-chat-status {
@@ -269,7 +247,6 @@
                 border-radius: 50%;
                 display: inline-block;
                 animation: rag-pulse-status 2s infinite;
-                flex-shrink: 0;
             }
 
             @keyframes rag-pulse-status {
@@ -287,7 +264,6 @@
                 transition: all 0.2s ease;
                 backdrop-filter: blur(10px);
                 font-size: 14px;
-                flex-shrink: 0;
             }
 
             .rag-close-btn:hover {
@@ -304,8 +280,6 @@
                 scrollbar-color: var(--rag-border-color) transparent;
                 scroll-behavior: smooth;
                 min-height: 0;
-                display: flex;
-                flex-direction: column;
             }
 
             .rag-messages-area::-webkit-scrollbar {
@@ -328,7 +302,6 @@
             .rag-message {
                 margin-bottom: 16px;
                 animation: rag-message-slide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-                width: 100%;
             }
 
             @keyframes rag-message-slide {
@@ -345,51 +318,45 @@
             .rag-message-user {
                 display: flex;
                 justify-content: flex-end;
-                width: 100%;
             }
 
             .rag-message-assistant {
                 display: flex;
                 align-items: flex-start;
                 gap: 10px;
-                width: 100%;
             }
 
             .rag-message-content {
                 max-width: calc(100% - 50px);
                 padding: 12px 16px;
-                border-radius: var(--rag-radius);
+                border-radius: 16px;
                 font-size: 14px;
-                line-height: 1.5;
+                line-height: 1.4;
                 word-wrap: break-word;
                 word-break: break-word;
-                overflow-wrap: break-word;
-                hyphens: auto;
             }
 
             .rag-message-user .rag-message-content {
                 background: linear-gradient(135deg, var(--rag-primary-color), var(--rag-primary-hover));
                 color: white;
-                border-radius: var(--rag-radius) var(--rag-radius) 4px var(--rag-radius);
+                border-radius: 16px 16px 4px 16px;
                 box-shadow: var(--rag-shadow-sm);
-                max-width: 80%;
+                max-width: 75%;
             }
 
             .rag-message-assistant .rag-message-content {
                 background: var(--rag-background);
                 color: var(--rag-text-primary);
                 border: 1px solid var(--rag-border-color);
-                border-radius: var(--rag-radius) var(--rag-radius) var(--rag-radius) 4px;
+                border-radius: 16px 16px 16px 4px;
                 box-shadow: var(--rag-shadow-sm);
-                flex: 1;
-                min-width: 0;
             }
 
             .rag-message-error .rag-message-content {
                 background: #fef2f2;
                 color: #dc2626;
                 border: 1px solid #fecaca;
-                border-radius: var(--rag-radius) var(--rag-radius) var(--rag-radius) 4px;
+                border-radius: 16px 16px 16px 4px;
             }
 
             .rag-assistant-avatar {
@@ -443,7 +410,7 @@
                 color: var(--rag-text-primary);
                 font-size: 12px;
                 padding: 8px 12px;
-                border-radius: var(--rag-radius-sm);
+                border-radius: 8px;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 font-weight: 500;
@@ -461,12 +428,12 @@
                 padding: 16px;
                 border-top: 1px solid var(--rag-border-color);
                 background: var(--rag-background);
-                border-radius: 0 0 var(--rag-radius) var(--rag-radius);
+                border-radius: 0 0 16px 16px;
                 flex-shrink: 0;
             }
 
             .rag-input-area.rag-embedded {
-                border-radius: 0 0 var(--rag-radius) var(--rag-radius);
+                border-radius: 0 0 12px 12px;
             }
 
             .rag-input-container {
@@ -478,7 +445,6 @@
                 border-radius: 12px;
                 border: 1px solid var(--rag-border-color);
                 transition: all 0.2s ease;
-                width: 100%;
             }
 
             .rag-input-container:focus-within {
@@ -499,8 +465,6 @@
                 max-height: 80px;
                 font-family: inherit;
                 line-height: 1.4;
-                width: 100%;
-                min-width: 0;
             }
 
             .rag-message-input:focus {
@@ -617,14 +581,7 @@
                 50% { transform: scale(1.1); }
             }
 
-            /* Mobile First Responsive Design */
-            @media (max-width: 1024px) {
-                .rag-chat-bubble {
-                    width: 360px;
-                    height: 580px;
-                }
-            }
-
+            /* Mobile Responsiveness */
             @media (max-width: 768px) {
                 .rag-chat-widget-container {
                     bottom: 16px;
@@ -632,32 +589,28 @@
                 }
 
                 .rag-chat-bubble {
-                    position: fixed !important;
                     bottom: 80px !important;
                     right: 16px !important;
                     left: 16px !important;
                     width: auto !important;
-                    height: calc(100vh - 140px) !important;
-                    max-height: calc(100vh - 140px) !important;
-                    min-height: 400px !important;
-                    border-radius: var(--rag-radius-lg) !important;
+                    height: 70vh !important;
+                    max-height: 500px !important;
                 }
 
                 .rag-chat-popup {
                     bottom: 70px;
                     right: 0;
-                    left: -100px;
-                    min-width: 180px;
-                    max-width: 240px;
+                    left: -50px;
+                    min-width: 150px;
                     font-size: 13px;
                 }
 
                 .rag-chat-popup::after {
-                    right: 60px;
+                    right: 50px;
                 }
 
                 .rag-chat-popup::before {
-                    right: 60px;
+                    right: 50px;
                 }
 
                 .rag-chat-button {
@@ -667,7 +620,7 @@
                 }
 
                 .rag-chat-header {
-                    padding: 14px 16px;
+                    padding: 12px 16px;
                 }
 
                 .rag-chat-title {
@@ -685,14 +638,13 @@
                 }
 
                 .rag-messages-area {
-                    padding: 14px;
+                    padding: 12px;
                 }
 
                 .rag-message-content {
-                    font-size: 14px;
-                    padding: 12px 14px;
+                    font-size: 13px;
+                    padding: 10px 14px;
                     max-width: calc(100% - 45px);
-                    line-height: 1.5;
                 }
 
                 .rag-message-user .rag-message-content {
@@ -700,69 +652,9 @@
                 }
 
                 .rag-assistant-avatar {
-                    width: 30px;
-                    height: 30px;
-                    font-size: 13px;
-                }
-
-                .rag-input-area {
-                    padding: 14px;
-                }
-
-                .rag-message-input {
-                    font-size: 14px;
-                    padding: 10px 12px;
-                }
-
-                .rag-send-btn {
-                    width: 36px;
-                    height: 36px;
-                    font-size: 14px;
-                }
-
-                .rag-quick-action-btn {
+                    width: 28px;
+                    height: 28px;
                     font-size: 12px;
-                    padding: 8px 12px;
-                }
-            }
-
-            /* Small mobile devices */
-            @media (max-width: 480px) {
-                .rag-chat-widget-container {
-                    bottom: 12px;
-                    right: 12px;
-                }
-
-                .rag-chat-bubble {
-                    bottom: 70px !important;
-                    right: 12px !important;
-                    left: 12px !important;
-                    height: calc(100vh - 120px) !important;
-                    max-height: calc(100vh - 120px) !important;
-                    border-radius: var(--rag-radius) !important;
-                }
-
-                .rag-chat-button {
-                    width: 52px;
-                    height: 52px;
-                    font-size: 18px;
-                }
-
-                .rag-chat-header {
-                    padding: 12px 14px;
-                }
-
-                .rag-chat-title {
-                    font-size: 13px;
-                }
-
-                .rag-messages-area {
-                    padding: 12px;
-                }
-
-                .rag-message-content {
-                    font-size: 13px;
-                    padding: 10px 12px;
                 }
 
                 .rag-input-area {
@@ -779,97 +671,33 @@
                     height: 32px;
                     font-size: 12px;
                 }
-
-                .rag-quick-action-btn {
-                    font-size: 11px;
-                    padding: 7px 10px;
-                }
-
-                .rag-chat-popup {
-                    left: -80px;
-                    min-width: 160px;
-                    max-width: 200px;
-                    font-size: 12px;
-                }
-
-                .rag-chat-popup::after,
-                .rag-chat-popup::before {
-                    right: 50px;
-                }
             }
 
-            /* Extra small devices */
-            @media (max-width: 360px) {
+            /* Small mobile devices */
+            @media (max-width: 480px) {
                 .rag-chat-bubble {
-                    right: 8px !important;
-                    left: 8px !important;
-                    bottom: 65px !important;
-                }
-
-                .rag-chat-widget-container {
-                    right: 8px;
-                    bottom: 8px;
+                    height: 75vh !important;
+                    max-height: 450px !important;
                 }
 
                 .rag-message-content {
                     font-size: 12px;
-                    padding: 8px 10px;
+                    padding: 8px 12px;
+                }
+
+                .rag-quick-action-btn {
+                    font-size: 11px;
+                    padding: 6px 10px;
                 }
             }
 
-            /* Landscape mobile orientation */
-            @media (max-height: 500px) and (orientation: landscape) {
-                .rag-chat-bubble {
-                    height: calc(100vh - 80px) !important;
-                    max-height: calc(100vh - 80px) !important;
-                    bottom: 60px !important;
-                }
-
-                .rag-messages-area {
-                    padding: 10px;
-                }
-
-                .rag-input-area {
-                    padding: 10px;
-                }
-
-                .rag-chat-header {
-                    padding: 10px 12px;
-                }
-            }
-
-            /* Embedded widget specific responsiveness */
+            /* Embedded widget specific styles */
             .rag-chat-widget-embedded {
-                min-height: 300px;
+                box-sizing: border-box;
             }
 
-            @media (max-width: 768px) {
-                .rag-chat-widget-embedded {
-                    min-height: 400px;
-                    height: 100%;
-                }
-
-                .rag-chat-widget-embedded .rag-messages-area {
-                    padding: 12px;
-                }
-
-                .rag-chat-widget-embedded .rag-input-area {
-                    padding: 12px;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .rag-chat-widget-embedded {
-                    min-height: 350px;
-                }
-
-                .rag-chat-widget-embedded .rag-messages-area {
-                    padding: 10px;
-                }
-
-                .rag-chat-widget-embedded .rag-input-area {
-                    padding: 10px;
-                }
+            .rag-chat-widget-embedded * {
+                box-sizing: border-box;
             }
 
             /* Dark mode adjustments */
@@ -901,15 +729,6 @@
                 border-top-color: var(--rag-border-color);
             }
 
-            /* High DPI screen optimizations */
-            @media (min-resolution: 2dppx) {
-                .rag-chat-avatar img,
-                .rag-assistant-avatar img {
-                    image-rendering: -webkit-optimize-contrast;
-                    image-rendering: crisp-edges;
-                }
-            }
-
             /* Accessibility */
             @media (prefers-reduced-motion: reduce) {
                 .rag-chat-bubble,
@@ -935,29 +754,6 @@
 
             .rag-message-input:focus {
                 outline: none;
-            }
-
-            /* Print styles */
-            @media print {
-                .rag-chat-widget-container,
-                .rag-chat-widget-embedded {
-                    display: none !important;
-                }
-            }
-
-            /* Hover states for touch devices */
-            @media (hover: none) and (pointer: coarse) {
-                .rag-quick-action-btn:hover,
-                .rag-chat-button:hover,
-                .rag-send-btn:hover,
-                .rag-close-btn:hover {
-                    transform: none;
-                }
-
-                .rag-quick-action-btn:active {
-                    background: var(--rag-primary-color);
-                    color: white;
-                }
             }
         `;
 
@@ -1095,33 +891,6 @@
                 charCount: document.getElementById('rag-char-count'),
                 popup: document.getElementById('rag-chat-popup')
             };
-
-            // Handle viewport changes for mobile
-            this.handleViewportChanges();
-        }
-
-        handleViewportChanges() {
-            if (typeof window !== 'undefined') {
-                const handleResize = () => {
-                    if (this.elements.bubble && this.isOpen) {
-                        requestAnimationFrame(() => {
-                            this.scrollToBottom();
-                        });
-                    }
-                };
-
-                const handleOrientationChange = () => {
-                    setTimeout(handleResize, 100);
-                };
-
-                window.addEventListener('resize', handleResize);
-                window.addEventListener('orientationchange', handleOrientationChange);
-
-                // Handle mobile viewport height changes
-                if ('visualViewport' in window) {
-                    window.visualViewport.addEventListener('resize', handleResize);
-                }
-            }
         }
 
         createFloatingWidget() {
@@ -1154,7 +923,7 @@
 
         createChatContent(embedded = false) {
             const avatarContent = this.config.avatar ? 
-                `<img src="${this.config.avatar}" alt="Assistant" loading="lazy" />` : 
+                `<img src="${this.config.avatar}" alt="Assistant" />` : 
                 `<i class="fas fa-sparkles"></i>`;
 
             return `
@@ -1235,6 +1004,7 @@
                 this.elements.popup.classList.add('rag-show');
                 this.popupShown = true;
                 
+                // Auto-hide popup after 1 minute if configured
                 if (this.config.popupAutoHide) {
                     this.popupAutoHideTimeout = setTimeout(() => {
                         this.hidePopup();
@@ -1248,6 +1018,7 @@
                 this.elements.popup.classList.remove('rag-show');
             }
             
+            // Clear the auto-hide timeout if it exists
             if (this.popupAutoHideTimeout) {
                 clearTimeout(this.popupAutoHideTimeout);
                 this.popupAutoHideTimeout = null;
@@ -1285,42 +1056,25 @@
                 }
             });
 
+            // Remove hover hide behavior - popup only hides when chat opens
             if (this.elements.toggleBtn) {
                 this.elements.toggleBtn.addEventListener('click', () => {
                     this.hidePopup();
                 });
             }
 
-            // Improved outside click handling for mobile
             if (!this.config.embedded) {
                 document.addEventListener('click', (e) => {
                     if (!this.elements.widget.contains(e.target) && this.isOpen) {
-                        // Add a small delay to prevent immediate closing on mobile
-                        setTimeout(() => {
-                            if (this.isOpen) {
-                                this.closeChat();
-                            }
-                        }, 150);
+                        setTimeout(() => this.closeChat(), 150);
                     }
                 });
-
-                // Handle touch events for better mobile experience
-                document.addEventListener('touchstart', (e) => {
-                    if (!this.elements.widget.contains(e.target) && this.isOpen) {
-                        setTimeout(() => {
-                            if (this.isOpen) {
-                                this.closeChat();
-                            }
-                        }, 150);
-                    }
-                }, { passive: true });
             }
 
-            // Prevent scroll issues on mobile
-            if (this.elements.bubble) {
-                this.elements.bubble.addEventListener('touchmove', (e) => {
-                    e.stopPropagation();
-                }, { passive: true });
+            if (this.config.embedded) {
+                window.addEventListener('resize', () => {
+                    this.scrollToBottom();
+                });
             }
         }
 
@@ -1332,12 +1086,9 @@
             if (this.config.embedded) return;
 
             this.elements.bubble.style.display = 'flex';
-            
-            // Force reflow before adding class
-            requestAnimationFrame(() => {
+            setTimeout(() => {
                 this.elements.bubble.classList.add('rag-open');
-                this.scrollToBottom();
-            });
+            }, 10);
 
             const chatIcon = document.getElementById('rag-chat-icon');
             const closeIcon = document.getElementById('rag-close-icon');
@@ -1349,19 +1100,13 @@
 
             this.hidePopup();
             this.isOpen = true;
-            
-            setTimeout(() => {
-                if (this.elements.messageInput) {
-                    this.elements.messageInput.focus();
-                }
-            }, 400);
+            setTimeout(() => this.elements.messageInput.focus(), 400);
         }
 
         closeChat() {
             if (this.config.embedded) return;
 
             this.elements.bubble.classList.remove('rag-open');
-            
             setTimeout(() => {
                 if (!this.isOpen) {
                     this.elements.bubble.style.display = 'none';
@@ -1425,7 +1170,7 @@
             const timeStr = this.config.showTime ? `<div class="rag-message-time">${formatTime(new Date())}</div>` : '';
             
             const avatarContent = this.config.avatar ? 
-                `<img src="${this.config.avatar}" alt="Assistant" loading="lazy" />` : 
+                `<img src="${this.config.avatar}" alt="Assistant" />` : 
                 `<i class="fas fa-sparkles"></i>`;
 
             messageDiv.innerHTML = `
@@ -1480,7 +1225,7 @@
             typingDiv.id = 'rag-typing-indicator';
             
             const avatarContent = this.config.avatar ? 
-                `<img src="${this.config.avatar}" alt="Assistant" loading="lazy" />` : 
+                `<img src="${this.config.avatar}" alt="Assistant" />` : 
                 `<i class="fas fa-sparkles"></i>`;
 
             typingDiv.innerHTML = `
@@ -1603,19 +1348,12 @@
             } else if (this.config.theme === 'auto') {
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 document.documentElement.setAttribute('data-rag-theme', prefersDark ? 'dark' : 'light');
-                
-                // Listen for theme changes
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                    document.documentElement.setAttribute('data-rag-theme', e.matches ? 'dark' : 'light');
-                });
             }
         }
 
         scrollToBottom() {
             requestAnimationFrame(() => {
-                if (this.elements.messagesArea) {
-                    this.elements.messagesArea.scrollTop = this.elements.messagesArea.scrollHeight;
-                }
+                this.elements.messagesArea.scrollTop = this.elements.messagesArea.scrollHeight;
             });
         }
 
@@ -1668,7 +1406,7 @@
             const avatars = document.querySelectorAll('.rag-chat-avatar, .rag-assistant-avatar');
             avatars.forEach(avatar => {
                 avatar.innerHTML = avatarUrl ? 
-                    `<img src="${avatarUrl}" alt="Assistant" loading="lazy" />` : 
+                    `<img src="${avatarUrl}" alt="Assistant" />` : 
                     `<i class="fas fa-sparkles"></i>`;
             });
         }

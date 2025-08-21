@@ -36,7 +36,7 @@
             }
 
             [data-rag-theme="dark"] {
-                --rag-primary-color: #3c4eeb;
+                --rag-primary-color: #1992c7;
                 --rag-primary-hover: #383a88;
                 --rag-primary-light: #c7d2fe;
                 --rag-background: #0f172a;

@@ -166,7 +166,7 @@ export function Sidebar({
             {!isCollapsed && "Clear conversations"}
           </Button>
           
-          <Button
+          {/* <Button
             variant="ghost"
             size="sm"
             onClick={onExportHistory}
@@ -178,7 +178,7 @@ export function Sidebar({
           >
             <Download className="h-4 w-4" />
             {!isCollapsed && "Export data"}
-          </Button>
+          </Button> */}
           
           <Button
             variant="ghost"

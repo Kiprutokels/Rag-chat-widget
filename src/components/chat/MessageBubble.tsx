@@ -98,7 +98,7 @@ export function MessageBubble({ message, onCopy, onLike }: MessageBubbleProps) {
           </div>
 
           {/* Sources */}
-          {message.sources && message.sources.length > 0 && (
+          {/* {message.sources && message.sources.length > 0 && (
             <div className={cn(
               'mt-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4 text-sm max-w-full',
               isUser ? 'ml-12' : 'mr-12'
@@ -129,7 +129,7 @@ export function MessageBubble({ message, onCopy, onLike }: MessageBubbleProps) {
                 </div>
               ))}
             </div>
-          )}
+          )} */}
 
           {/* Message Meta and Actions */}
           <div className={cn(

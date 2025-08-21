@@ -72,7 +72,7 @@ export function Layout({
           title="Knowledge Assistant"
         />
 
-        {/* Chat Area - Fixed height with proper scrolling */}
+        {/* Chat Area */}
         <div className="flex-1 flex flex-col bg-white dark:bg-gray-800 min-h-0">
           {showWelcome ? (
             <WelcomeScreen onQuickAction={onQuickAction} />
@@ -85,7 +85,7 @@ export function Layout({
             />
           )}
 
-          {/* Message Input - Fixed at bottom */}
+          {/* Message Input*/}
           <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <MessageInput
               onSend={onSendMessage}

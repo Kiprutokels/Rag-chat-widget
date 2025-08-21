@@ -15,8 +15,8 @@
         style.id = 'rag-chat-widget-styles';
         style.textContent = `
             :root {
-                --rag-primary-color: #3134db;
-                --rag-primary-hover: #140d8a;
+                --rag-primary-color: #1992c7;
+                --rag-primary-hover: #3932acff;
                 --rag-primary-light: #a5b4fc;
                 --rag-success-color: #10b981;
                 --rag-error-color: #ef4444;

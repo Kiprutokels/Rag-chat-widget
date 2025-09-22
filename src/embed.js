@@ -6,6 +6,41 @@
         return;
     }
 
+    // SVG Icons object
+    const SVGIcons = {
+        comments: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+        </svg>`,
+        
+        times: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>`,
+        
+        sparkles: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 11H7l.5-2L9 7v4zm0 4H7l.5 2L9 19v-4zm2-6h2l-.5-2L11 5v6zm0 8h2l-.5 2L11 21v-6zm4-6h2l-.5-2L15 7v4zm0 4h2l-.5 2L15 19v-4zM12 2l.5 2L15 6l-2.5.5L12 9 11.5 6.5 9 6l2.5-.5L12 2zm0 20l-.5-2L9 18l2.5-.5L12 15l.5 2.5L15 18l-2.5.5L12 22z"/>
+        </svg>`,
+        
+        paperPlane: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>`,
+        
+        questionCircle: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+        </svg>`,
+        
+        star: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>`,
+        
+        headset: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+        </svg>`,
+        
+        exclamationTriangle: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+        </svg>`
+    };
+
     function injectStyles() {
         if (document.getElementById('rag-chat-widget-styles')) {
             return;
@@ -264,6 +299,9 @@
                 transition: all 0.2s ease;
                 backdrop-filter: blur(10px);
                 font-size: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .rag-close-btn:hover {
@@ -581,6 +619,20 @@
                 50% { transform: scale(1.1); }
             }
 
+            /* SVG Icon styling */
+            .rag-svg-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: inherit;
+            }
+
+            .rag-svg-icon svg {
+                width: 1em;
+                height: 1em;
+                fill: currentColor;
+            }
+
             /* Mobile Responsiveness */
             @media (max-width: 768px) {
                 .rag-chat-widget-container {
@@ -760,21 +812,6 @@
         document.head.appendChild(style);
     }
 
-    function loadFontAwesome() {
-        if (document.querySelector('link[href*="font-awesome"]')) {
-            return Promise.resolve();
-        }
-
-        return new Promise((resolve, reject) => {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
-            link.onload = () => resolve();
-            link.onerror = () => reject();
-            document.head.appendChild(link);
-        });
-    }
-
     function loadInterFont() {
         if (document.querySelector('link[href*="fonts.googleapis.com/css2?family=Inter"]')) {
             return Promise.resolve();
@@ -797,6 +834,15 @@
             minute: '2-digit',
             hour12: true
         });
+    }
+
+    // Helper function to create SVG icon
+    function createSVGIcon(iconName, className = 'rag-svg-icon') {
+        if (!SVGIcons[iconName]) {
+            console.warn(`SVG icon '${iconName}' not found`);
+            return `<div class="${className}">?</div>`;
+        }
+        return `<div class="${className}">${SVGIcons[iconName]}</div>`;
     }
 
     // RAG Chat Widget Class
@@ -837,11 +883,7 @@
 
         async init() {
             try {
-                await Promise.all([
-                    loadFontAwesome().catch(() => console.warn('Font Awesome failed to load')),
-                    loadInterFont().catch(() => console.warn('Inter font failed to load'))
-                ]);
-
+                await loadInterFont().catch(() => console.warn('Inter font failed to load'));
                 this.createWidget();
                 this.bindEvents();
                 this.checkConnection();
@@ -903,8 +945,8 @@
                         ${this.config.popupMessage}
                     </div>
                     <button class="rag-chat-button" id="rag-chat-toggle-btn" aria-label="Open chat">
-                        <i class="fas fa-comments" id="rag-chat-icon"></i>
-                        <i class="fas fa-times" id="rag-close-icon" style="display: none;"></i>
+                        <div id="rag-chat-icon">${createSVGIcon('comments')}</div>
+                        <div id="rag-close-icon" style="display: none;">${createSVGIcon('times')}</div>
                         <div class="rag-notification-badge" id="rag-notification-badge" style="display: none;">1</div>
                     </button>
                 </div>
@@ -924,7 +966,7 @@
         createChatContent(embedded = false) {
             const avatarContent = this.config.avatar ? 
                 `<img src="${this.config.avatar}" alt="Assistant" />` : 
-                `<i class="fas fa-sparkles"></i>`;
+                createSVGIcon('sparkles');
 
             return `
                 <div class="rag-chat-header ${embedded ? 'rag-embedded' : ''}">
@@ -940,7 +982,7 @@
                             </p>
                         </div>
                     </div>
-                    ${!embedded ? '<button class="rag-close-btn" id="rag-close-chat-btn" aria-label="Close chat"><i class="fas fa-times"></i></button>' : ''}
+                    ${!embedded ? `<button class="rag-close-btn" id="rag-close-chat-btn" aria-label="Close chat">${createSVGIcon('times')}</button>` : ''}
                 </div>
 
                 <div class="rag-messages-area" id="rag-messages-area">
@@ -953,15 +995,15 @@
                             ${this.config.showTime ? `<div class="rag-message-time">${formatTime(new Date())}</div>` : ''}
                             <div class="rag-quick-actions">
                                 <button class="rag-quick-action-btn" data-query="How can you help me?">
-                                    <i class="fas fa-question-circle"></i>
+                                    ${createSVGIcon('questionCircle')}
                                     How can you help me?
                                 </button>
                                 <button class="rag-quick-action-btn" data-query="What can you do?">
-                                    <i class="fas fa-star"></i>
+                                    ${createSVGIcon('star')}
                                     What can you do?
                                 </button>
                                 <button class="rag-quick-action-btn" data-query="I need support">
-                                    <i class="fas fa-headset"></i>
+                                    ${createSVGIcon('headset')}
                                     I need support
                                 </button>
                             </div>
@@ -980,7 +1022,7 @@
                             aria-label="Message input"
                         ></textarea>
                         <button class="rag-send-btn" id="rag-send-btn" aria-label="Send message">
-                            <i class="fas fa-paper-plane"></i>
+                            ${createSVGIcon('paperPlane')}
                         </button>
                     </div>
                     <div class="rag-input-footer">
@@ -1171,7 +1213,7 @@
             
             const avatarContent = this.config.avatar ? 
                 `<img src="${this.config.avatar}" alt="Assistant" />` : 
-                `<i class="fas fa-sparkles"></i>`;
+                createSVGIcon('sparkles');
 
             messageDiv.innerHTML = `
                 <div class="rag-assistant-avatar">
@@ -1194,7 +1236,7 @@
             
             messageDiv.innerHTML = `
                 <div class="rag-assistant-avatar" style="background: var(--rag-error-color);">
-                    <i class="fas fa-exclamation-triangle"></i>
+                    ${createSVGIcon('exclamationTriangle')}
                 </div>
                 <div class="rag-message-content">
                     ${this.escapeHtml(message)}
@@ -1226,7 +1268,7 @@
             
             const avatarContent = this.config.avatar ? 
                 `<img src="${this.config.avatar}" alt="Assistant" />` : 
-                `<i class="fas fa-sparkles"></i>`;
+                createSVGIcon('sparkles');
 
             typingDiv.innerHTML = `
                 <div class="rag-assistant-avatar">
@@ -1407,7 +1449,7 @@
             avatars.forEach(avatar => {
                 avatar.innerHTML = avatarUrl ? 
                     `<img src="${avatarUrl}" alt="Assistant" />` : 
-                    `<i class="fas fa-sparkles"></i>`;
+                    createSVGIcon('sparkles');
             });
         }
 

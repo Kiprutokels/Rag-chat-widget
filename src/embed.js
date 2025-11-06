@@ -1161,13 +1161,9 @@
                                     ${createSVGIcon('questionCircle')}
                                     How can you help me?
                                 </button>
-                                <button class="rag-quick-action-btn" data-query="About Fortune?">
+                                <button class="rag-quick-action-btn" data-query="Fortune Technologies Services?">
                                     ${createSVGIcon('star')}
-                                    Tell me about Fortune company
-                                </button>
-                                <button class="rag-quick-action-btn" data-query="I need support">
-                                    ${createSVGIcon('headset')}
-                                    I need support
+                                    What Services does Fortune offer?
                                 </button>
                             </div>
                         </div>

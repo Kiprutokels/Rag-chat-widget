@@ -234,6 +234,8 @@
                 display: flex;
                 align-items: center;
                 gap: 12px;
+                min-width: 0;
+                flex: 1;
             }
 
             .rag-chat-avatar {
@@ -257,6 +259,11 @@
                 border-radius: 10px;
             }
 
+            .rag-chat-title-container {
+                min-width: 0;
+                flex: 1;
+            }
+
             .rag-chat-title {
                 font-weight: 600;
                 font-size: 15px;
@@ -264,6 +271,9 @@
                 letter-spacing: -0.025em;
                 line-height: 1.3;
                 color: white;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .rag-chat-status {
@@ -282,6 +292,7 @@
                 border-radius: 50%;
                 display: inline-block;
                 animation: rag-pulse-status 2s infinite;
+                flex-shrink: 0;
             }
 
             @keyframes rag-pulse-status {
@@ -302,6 +313,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                flex-shrink: 0;
             }
 
             .rag-close-btn:hover {
@@ -312,6 +324,7 @@
             .rag-messages-area {
                 flex: 1;
                 overflow-y: auto;
+                overflow-x: hidden;
                 padding: 16px;
                 background: var(--rag-surface);
                 scrollbar-width: thin;
@@ -340,6 +353,8 @@
             .rag-message {
                 margin-bottom: 16px;
                 animation: rag-message-slide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
 
             @keyframes rag-message-slide {
@@ -369,9 +384,11 @@
                 padding: 12px 16px;
                 border-radius: 16px;
                 font-size: 14px;
-                line-height: 1.4;
+                line-height: 1.5;
                 word-wrap: break-word;
                 word-break: break-word;
+                overflow-wrap: break-word;
+                hyphens: auto;
             }
 
             .rag-message-user .rag-message-content {
@@ -452,6 +469,8 @@
                 cursor: pointer;
                 transition: all 0.2s ease;
                 font-weight: 500;
+                white-space: normal;
+                word-wrap: break-word;
             }
 
             .rag-quick-action-btn:hover {
@@ -619,12 +638,12 @@
                 50% { transform: scale(1.1); }
             }
 
-            /* SVG Icon styling */
             .rag-svg-icon {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 color: inherit;
+                flex-shrink: 0;
             }
 
             .rag-svg-icon svg {
@@ -633,7 +652,15 @@
                 fill: currentColor;
             }
 
-            /* Mobile Responsiveness */
+            /* Tablet Responsiveness */
+            @media (max-width: 1024px) {
+                .rag-chat-bubble {
+                    width: 380px;
+                    height: 550px;
+                }
+            }
+
+            /* Mobile Responsiveness - Large phones */
             @media (max-width: 768px) {
                 .rag-chat-widget-container {
                     bottom: 16px;
@@ -646,23 +673,25 @@
                     left: 16px !important;
                     width: auto !important;
                     height: 70vh !important;
-                    max-height: 500px !important;
+                    max-height: 550px !important;
                 }
 
                 .rag-chat-popup {
                     bottom: 70px;
                     right: 0;
-                    left: -50px;
-                    min-width: 150px;
+                    left: auto;
+                    min-width: 180px;
+                    max-width: 250px;
                     font-size: 13px;
+                    white-space: normal;
                 }
 
                 .rag-chat-popup::after {
-                    right: 50px;
+                    right: 28px;
                 }
 
                 .rag-chat-popup::before {
-                    right: 50px;
+                    right: 28px;
                 }
 
                 .rag-chat-button {
@@ -672,7 +701,11 @@
                 }
 
                 .rag-chat-header {
-                    padding: 12px 16px;
+                    padding: 14px 16px;
+                }
+
+                .rag-chat-header-info {
+                    gap: 10px;
                 }
 
                 .rag-chat-title {
@@ -690,13 +723,115 @@
                 }
 
                 .rag-messages-area {
-                    padding: 12px;
+                    padding: 14px;
+                }
+
+                .rag-message {
+                    margin-bottom: 14px;
                 }
 
                 .rag-message-content {
                     font-size: 13px;
                     padding: 10px 14px;
-                    max-width: calc(100% - 45px);
+                    max-width: calc(100% - 48px);
+                    line-height: 1.45;
+                }
+
+                .rag-message-user .rag-message-content {
+                    max-width: 80%;
+                }
+
+                .rag-assistant-avatar {
+                    width: 30px;
+                    height: 30px;
+                    font-size: 13px;
+                }
+
+                .rag-message-assistant {
+                    gap: 8px;
+                }
+
+                .rag-quick-actions {
+                    margin-top: 8px;
+                }
+
+                .rag-quick-action-btn {
+                    font-size: 12px;
+                    padding: 8px 10px;
+                }
+
+                .rag-input-area {
+                    padding: 14px;
+                }
+
+                .rag-message-input {
+                    font-size: 14px;
+                    padding: 9px 11px;
+                }
+
+                .rag-send-btn {
+                    width: 34px;
+                    height: 34px;
+                    font-size: 13px;
+                }
+
+                .rag-input-footer {
+                    font-size: 10px;
+                }
+            }
+
+            /* Small mobile devices */
+            @media (max-width: 480px) {
+                .rag-chat-bubble {
+                    height: 75vh !important;
+                    max-height: 500px !important;
+                    bottom: 75px !important;
+                }
+
+                .rag-chat-popup {
+                    max-width: 200px;
+                    font-size: 12px;
+                }
+
+                .rag-chat-header {
+                    padding: 12px 14px;
+                }
+
+                .rag-chat-header-info {
+                    gap: 8px;
+                }
+
+                .rag-chat-title {
+                    font-size: 13px;
+                }
+
+                .rag-chat-status {
+                    font-size: 10px;
+                }
+
+                .rag-chat-avatar {
+                    width: 28px;
+                    height: 28px;
+                    font-size: 12px;
+                }
+
+                .rag-close-btn {
+                    padding: 6px;
+                }
+
+                .rag-messages-area {
+                    padding: 12px;
+                }
+
+                .rag-message {
+                    margin-bottom: 12px;
+                }
+
+                .rag-message-content {
+                    font-size: 12px;
+                    padding: 9px 12px;
+                    max-width: calc(100% - 42px);
+                    line-height: 1.5;
                 }
 
                 .rag-message-user .rag-message-content {
@@ -709,8 +844,26 @@
                     font-size: 12px;
                 }
 
+                .rag-message-assistant {
+                    gap: 6px;
+                }
+
+                .rag-quick-actions {
+                    margin-top: 8px;
+                    gap: 5px;
+                }
+
+                .rag-quick-action-btn {
+                    font-size: 11px;
+                    padding: 7px 9px;
+                }
+
                 .rag-input-area {
                     padding: 12px;
+                }
+
+                .rag-input-container {
+                    gap: 6px;
                 }
 
                 .rag-message-input {
@@ -723,36 +876,51 @@
                     height: 32px;
                     font-size: 12px;
                 }
+
+                .rag-input-footer {
+                    margin-top: 6px;
+                }
             }
 
-            /* Small mobile devices */
-            @media (max-width: 480px) {
+            /* Extra small devices */
+            @media (max-width: 360px) {
+                .rag-chat-button {
+                    width: 52px;
+                    height: 52px;
+                    font-size: 18px;
+                }
+
                 .rag-chat-bubble {
-                    height: 75vh !important;
                     max-height: 450px !important;
                 }
 
-                .rag-message-content {
+                .rag-chat-header {
+                    padding: 10px 12px;
+                }
+
+                .rag-chat-title {
                     font-size: 12px;
-                    padding: 8px 12px;
+                }
+
+                .rag-message-content {
+                    font-size: 11px;
+                    padding: 8px 11px;
                 }
 
                 .rag-quick-action-btn {
-                    font-size: 11px;
-                    padding: 6px 10px;
+                    font-size: 10px;
+                    padding: 6px 8px;
                 }
             }
 
-            /* Embedded widget specific styles */
-            .rag-chat-widget-embedded {
-                box-sizing: border-box;
+            /* Landscape mobile orientation */
+            @media (max-width: 896px) and (max-height: 414px) and (orientation: landscape) {
+                .rag-chat-bubble {
+                    height: 85vh !important;
+                    max-height: none !important;
+                }
             }
 
-            .rag-chat-widget-embedded * {
-                box-sizing: border-box;
-            }
-
-            /* Dark mode adjustments */
             [data-rag-theme="dark"] .rag-message-assistant .rag-message-content {
                 background: var(--rag-surface);
                 border-color: var(--rag-border-color);
@@ -781,7 +949,6 @@
                 border-top-color: var(--rag-border-color);
             }
 
-            /* Accessibility */
             @media (prefers-reduced-motion: reduce) {
                 .rag-chat-bubble,
                 .rag-chat-button,
@@ -795,7 +962,6 @@
                 }
             }
 
-            /* Focus styles for keyboard navigation */
             .rag-chat-button:focus,
             .rag-close-btn:focus,
             .rag-send-btn:focus,
@@ -827,7 +993,6 @@
         });
     }
 
-    // Utility function to format time
     function formatTime(date) {
         return date.toLocaleTimeString([], { 
             hour: '2-digit', 
@@ -836,7 +1001,6 @@
         });
     }
 
-    // Helper function to create SVG icon
     function createSVGIcon(iconName, className = 'rag-svg-icon') {
         if (!SVGIcons[iconName]) {
             console.warn(`SVG icon '${iconName}' not found`);
@@ -845,7 +1009,6 @@
         return `<div class="${className}">${SVGIcons[iconName]}</div>`;
     }
 
-    // RAG Chat Widget Class
     class RAGChatWidget {
         constructor(options = {}) {
             this.config = {
@@ -974,7 +1137,7 @@
                         <div class="rag-chat-avatar">
                             ${avatarContent}
                         </div>
-                        <div>
+                        <div class="rag-chat-title-container">
                             <h3 class="rag-chat-title">${this.config.title}</h3>
                             <p class="rag-chat-status">
                                 <span class="rag-status-dot"></span>
@@ -998,9 +1161,9 @@
                                     ${createSVGIcon('questionCircle')}
                                     How can you help me?
                                 </button>
-                                <button class="rag-quick-action-btn" data-query="What can you do?">
+                                <button class="rag-quick-action-btn" data-query="About Fortune?">
                                     ${createSVGIcon('star')}
-                                    What can you do?
+                                    Tell me about Fortune company
                                 </button>
                                 <button class="rag-quick-action-btn" data-query="I need support">
                                     ${createSVGIcon('headset')}
@@ -1046,7 +1209,6 @@
                 this.elements.popup.classList.add('rag-show');
                 this.popupShown = true;
                 
-                // Auto-hide popup after 1 minute if configured
                 if (this.config.popupAutoHide) {
                     this.popupAutoHideTimeout = setTimeout(() => {
                         this.hidePopup();
@@ -1060,7 +1222,6 @@
                 this.elements.popup.classList.remove('rag-show');
             }
             
-            // Clear the auto-hide timeout if it exists
             if (this.popupAutoHideTimeout) {
                 clearTimeout(this.popupAutoHideTimeout);
                 this.popupAutoHideTimeout = null;
@@ -1098,7 +1259,6 @@
                 }
             });
 
-            // Remove hover hide behavior - popup only hides when chat opens
             if (this.elements.toggleBtn) {
                 this.elements.toggleBtn.addEventListener('click', () => {
                     this.hidePopup();
@@ -1414,7 +1574,6 @@
             return text;
         }
 
-        // Public API methods
         open() {
             this.openChat();
         }
@@ -1477,10 +1636,8 @@
         }
     }
 
-    // Make RAGChatWidget globally available
     window.RAGChatWidget = RAGChatWidget;
 
-    // Auto-initialize based on configuration
     function autoInit() {
         injectStyles();
 

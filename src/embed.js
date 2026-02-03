@@ -1165,6 +1165,11 @@
                                     ${createSVGIcon('star')}
                                     What Services does Fortune offer?
                                 </button>
+                                <button class="rag-quick-action-btn"
+                                        data-query="What does the Payroll & HR System entail?">
+                                    ${createSVGIcon('users')}
+                                    Payroll & HR System Help
+                                </button>
                             </div>
                         </div>
                     </div>
